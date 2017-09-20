@@ -1,0 +1,47 @@
+---
+# Install. Only for Debian/Ubuntu at the moment (..)
+- include: "install-{{ ansible_os_family }}.yml"
+  static: no
+- name: Copy config files.
+  copy:
+    src: "config/{{ item }}"
+    dest: "/etc/nagios3/{{ item }}"
+  with_items: "{{ nagios_config_files }}"
+  notify:
+    restart nagios
+- name: Copy plugin config files.
+  copy:
+    src: "etc_nagios-plugins_config/{{ item }}"
+    dest: "/etc/nagios-plugins/config/{{ item }}"
+  with_items: "{{ etc_nagios_plugins_config_files }}"
+  notify:
+    restart nagios
+- name: Create hosts config from templates
+  template: >
+    src={{ item.value.src_template_file }}
+    dest=/etc/nagios3/conf.d/{{ item.value.dest_file }}
+    owner=root group=root mode=0644
+  with_dict: "{{ nagios_hosts }}"
+  notify:
+    restart nagios
+- name: Create hostgroups config from templates
+  template: >
+    src="hostgroups_nagios2.cfg.j2"
+    dest="/etc/nagios3/conf.d/hostgroups_nagios2.cfg"
+    owner=root group=root mode=0644
+  notify:
+    restart nagios
+- name: Update htpasswd.
+  htpasswd:
+    state: present
+    name: "{{ item.key }}"
+    password: "{{ item.value.password }}"
+    path: /etc/nagios3/htpasswd.users
+  with_dict: "{{ users }}"
+  notify:
+    restart apache
+# post install commands
+- include: "post_install-{{ ansible_os_family }}.yml"
+  static: no
+...
+# vim: ft=ansible:

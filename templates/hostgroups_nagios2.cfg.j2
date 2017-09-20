@@ -1,0 +1,36 @@
+# Some generic hostgroup definitions
+
+# A simple wildcard hostgroup
+define hostgroup {
+        hostgroup_name  all
+		alias           All Servers
+		members         *
+}
+
+# A list of your Ubuntu Linux servers
+define hostgroup {
+        hostgroup_name  ubuntu-servers
+		alias           Ubuntu Linux Servers
+		members         {{ ubuntu_servers['members'] }}
+}
+
+# A list of your CentOS7 Linux servers
+define hostgroup {
+        hostgroup_name  centos7-servers
+                alias           CentOS7 Linux Servers
+		members         {{ centos7_servers['members'] }}
+}
+
+# A list of your web servers
+define hostgroup {
+        hostgroup_name  http-servers
+		alias           HTTP servers
+		members         {{ http_servers['members'] }}
+}
+
+# A list of your ssh-accessible servers
+define hostgroup {
+        hostgroup_name  ssh-servers
+		alias           SSH servers
+		members         {{ ssh_servers['members'] }}
+}

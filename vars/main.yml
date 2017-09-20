@@ -1,0 +1,38 @@
+---
+apt_install_list:
+  - nagios3
+  - nagios-nrpe-plugin
+  - python-passlib
+nagios_config_files:
+  - cgi.cfg
+  - nagios.cfg
+  - conf.d/services_nagios2.cfg
+etc_nagios_plugins_config_files:
+  - disk.cfg
+# change below to suit your settings
+nagios_hosts:
+  ubuntu_host1:
+    src_template_file: "ubuntu_host1.cfg.j2"
+    dest_file: "ubuntu_host1.cfg"
+    ip_address: 192.168.33.11
+  centos7_host2:
+    src_template_file: "centos7_host2.cfg.j2"
+    dest_file: "centos7_host2.cfg"
+    ip_address: 192.168.33.17
+# hostgroups
+ubuntu_servers:
+  members: localhost,ubuntu_host1
+centos7_servers:
+  members: centos7_host2
+http_servers:
+  members: localhost,ubuntu_host1
+ssh_servers:
+  members: localhost,ubuntu_host1,centos7_host2
+# and your passwords
+users:
+  nagiosadmin:
+    password: secret
+  view:
+    password: view
+...
+# vim: ft=ansible:

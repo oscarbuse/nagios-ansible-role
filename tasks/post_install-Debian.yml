@@ -1,0 +1,17 @@
+- name: put apache user in group nagios
+  user:
+    name: www-data
+    groups: nagios
+    append: yes
+#- name: put apache user in group nagios
+#  command: usermod www-data -a -G nagios
+  notify:
+    restart apache_and_nagios
+- name: make sure /var/lib/nagios3/rw is accessible for www-data
+  file:
+    path: /var/lib/nagios3/rw
+    owner: nagios
+    group: www-data
+    mode: 0710
+  notify:
+    restart apache_and_nagios

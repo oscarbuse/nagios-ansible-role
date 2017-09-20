@@ -1,0 +1,8 @@
+---
+- name: restart nagios
+  service: name="nagios3" state=restarted
+- name: restart apache
+  service: name="apache2" state=restarted
+- name: restart apache_and_nagios
+  service: name="apache2" state=restarted
+  notify: restart nagios
